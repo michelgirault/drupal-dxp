@@ -1,0 +1,52 @@
+/**
+ * Square mixin
+ *
+ * @param [Number] $dimensions = the height and width of the element
+ */
+/* stylelint-disable */
+/* stylelint-enable */
+.icon--icon-usp:before {
+  display: inline-block;
+  height: 3.785em;
+  width: 4.16em;
+  font-size: 0.39062rem;
+  background-image: url("../images/generated/sprite.svg");
+  background-position: 0em 0em;
+  background-size: 11.5em 11.125em;
+  content: "";
+}
+
+.icon--test:before {
+  display: inline-block;
+  height: 6.5em;
+  width: 6.5em;
+  font-size: 0.25rem;
+  background-image: url("../images/generated/sprite.svg");
+  background-position: -4.625em -4.25em;
+  background-size: 11.5em 11.125em;
+  content: "";
+}
+
+@media print {
+  .view--job-overview .block--provider-facets {
+    display: none !important;
+  }
+  .job--header {
+    text-align: center;
+  }
+  .job--header .node__meta--full {
+    display: block !important;
+  }
+  .note__meta--job-full--top .field--name-field-job-tags {
+    display: block;
+    width: 100%;
+  }
+  .note__meta--job-full--top .field--name-field-job-tags .field__items {
+    display: block;
+    width: 100%;
+    text-align: center;
+  }
+  .note__meta--job-full--top .field--name-field-job-tags .field__item {
+    display: inline-block;
+  }
+}

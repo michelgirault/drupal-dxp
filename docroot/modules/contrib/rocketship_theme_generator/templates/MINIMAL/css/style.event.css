@@ -1,0 +1,119 @@
+/**
+ * Square mixin
+ *
+ * @param [Number] $dimensions = the height and width of the element
+ */
+/* stylelint-disable */
+/* stylelint-enable */
+.icon--icon-usp:before {
+  display: inline-block;
+  height: 3.785em;
+  width: 4.16em;
+  font-size: 0.39062rem;
+  background-image: url("../images/generated/sprite.svg");
+  background-position: 0em 0em;
+  background-size: 11.5em 11.125em;
+  content: "";
+}
+
+.icon--test:before {
+  display: inline-block;
+  height: 6.5em;
+  width: 6.5em;
+  font-size: 0.25rem;
+  background-image: url("../images/generated/sprite.svg");
+  background-position: -4.625em -4.25em;
+  background-size: 11.5em 11.125em;
+  content: "";
+}
+
+/*!
+ * Font Awesome Pro 5.15.2 by @fontawesome - https://fontawesome.com
+ * License - https://fontawesome.com/license (Commercial License)
+ */
+body::after {
+  content: "bp-xs";
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  display: block;
+  padding: 0.625rem;
+  background: red;
+  visibility: hidden;
+  opacity: 0;
+}
+
+body.theme-debug-mode::after {
+  visibility: visible;
+}
+
+@media (min-width: 768px) {
+  body::after {
+    content: "bp-sm";
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    background: #ffce00;
+  }
+}
+
+@media (min-width: 940px) {
+  body::after {
+    content: "bp-md";
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    background: yellow;
+  }
+}
+
+@media (min-width: 1200px) {
+  body::after {
+    content: "bp-lg";
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    background: green;
+  }
+}
+
+/* stylelint-disable */
+/* stylelint-enable */
+.event__bar--full {
+  position: relative;
+}
+
+@media (min-width: 768px) {
+  .event__bar--full {
+    top: 0;
+  }
+  .event__bar--full.js-sticky {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 910;
+    transition: top 0.3s ease-in-out;
+  }
+  .toolbar-fixed.toolbar-horizontal .event__bar--full.js-sticky {
+    top: 4.9375rem;
+  }
+}
+
+.event__top--full .layout__subregion-02 {
+  position: relative;
+  color: #fff;
+  transition: all 0.3s ease-in-out;
+}
+
+.event__top--full {
+  position: relative;
+}
+
+.event__top--full .field--image .media,
+.event__top--full .field--name-field-media-canonical-image .media {
+  position: static;
+}
+
+.event__top--full .layout__subregion-01 {
+  position: relative;
+}
