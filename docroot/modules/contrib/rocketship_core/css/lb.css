@@ -1533,7 +1533,8 @@
   /* Edit layout actions */
 
   #node-page-layout-builder-form,
-  #entity-view-display-layout-builder-form {
+  #entity-view-display-layout-builder-form,
+  .node-layout-builder-form {
     position: fixed;
     z-index: 908;
     bottom: 0;

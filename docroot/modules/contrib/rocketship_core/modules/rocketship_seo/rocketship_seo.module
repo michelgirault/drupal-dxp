@@ -184,18 +184,24 @@ function rocketship_seo_form_node_type_form_alter(&$form, FormStateInterface $fo
   /** @var \Drupal\node\NodeTypeInterface $node_type */
   $node_type = $form_state->getFormObject()->getEntity();
 
-  $entity_type_id = 'node';
-  $bundle = $node_type->id();
   $options = [];
 
-  $field_definitions = \Drupal::service('entity_field.manager')
-    ->getFieldDefinitions($entity_type_id, $bundle);
+  if ($node_type->id()) {
+    $entity_type_id = 'node';
+    $bundle = $node_type->id();
+    $field_definitions = \Drupal::service('entity_field.manager')
+      ->getFieldDefinitions($entity_type_id, $bundle);
 
-  foreach ($field_definitions as $field_name => $field_definition) {
-    if (!empty($field_definition->getTargetBundle())) {
-      $options[$field_name] = $field_definition->getLabel();
+    foreach ($field_definitions as $field_name => $field_definition) {
+      if (!empty($field_definition->getTargetBundle())) {
+        $options[$field_name] = $field_definition->getLabel();
+      }
     }
   }
+
+  $default_fields = [];
+  $default_title = t('Overview');
+  $default_description = t('Content here is displayed on overview pages. Additionally, it is used for search engine and social media snippets. You can further finetune what exactly is used for each snippet in the "Metatags" tab.');
 
   $form['rocketship_seo'] = [
     '#type' => 'fieldset',
@@ -207,21 +213,21 @@ function rocketship_seo_form_node_type_form_alter(&$form, FormStateInterface $fo
     '#type' => 'select',
     '#options' => $options,
     '#multiple' => TRUE,
-    '#default_value' => $node_type->getThirdPartySetting('rocketship_seo', 'seo_fields', []),
+    '#default_value' => $node_type ? $node_type->getThirdPartySetting('rocketship_seo', 'seo_fields', $default_fields): $default_fields,
     '#description' => 'Which fields you wish to place in a special section in the sidebar on node edit forms.',
     '#weight' => 0,
   ];
   $form['rocketship_seo']['seo_title'] = [
     '#title' => t('Details title'),
     '#type' => 'textfield',
-    '#default_value' => $node_type->getThirdPartySetting('rocketship_seo', 'seo_title', 'Overview'),
+    '#default_value' => $node_type ? $node_type->getThirdPartySetting('rocketship_seo', 'seo_title', $default_title): $default_title,
     '#description' => 'The title of the special section in the sidebar.',
     '#weight' => 0,
   ];
   $form['rocketship_seo']['seo_description'] = [
     '#title' => t('Details description'),
     '#type' => 'textarea',
-    '#default_value' => $node_type->getThirdPartySetting('rocketship_seo', 'seo_description', 'Content here is displayed on overview pages. Additionally, it is used for search engine and social media snippets. You can further finetune what exactly is used for each snippet in the "Metatags" tab.'),
+    '#default_value' => $node_type ? $node_type->getThirdPartySetting('rocketship_seo', 'seo_description', $default_description) : $default_description,
     '#description' => 'The description for the special section in the sidebar.',
     '#weight' => 0,
   ];

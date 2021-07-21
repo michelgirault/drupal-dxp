@@ -98,11 +98,6 @@ function gin_toolbar_page_attachments_alter(&$page) {
  * Toolbar alter().
  */
 function gin_toolbar_theme_registry_alter(&$theme_registry) {
-  // Are we relevant?
-  if (!_gin_toolbar_gin_is_active()) {
-    return;
-  }
-
   $theme_registry['toolbar']['path'] = drupal_get_path('module', 'gin_toolbar') . '/templates';
   $theme_registry['menu__toolbar']['path'] = drupal_get_path('module', 'gin_toolbar') . '/templates';
 }

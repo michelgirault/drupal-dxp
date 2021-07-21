@@ -172,13 +172,12 @@ abstract class GeofieldProximitySourceBase extends PluginBase implements Geofiel
   public function getHaversineOptions() {
 
     $origin = $this->getOrigin();
-    if ($this->isEmptyLocation($origin['lat'], $origin['lon'])) {
-      return NULL;
-    }
     if (!$origin || !$this->isValidLocation($origin['lat'], $origin['lon'])) {
       throw new HaversineUnavailableException('Not able to calculate Haversine Options due to invalid Proximity origin location.');
     }
-
+    if ($this->isEmptyLocation($origin['lat'], $origin['lon'])) {
+      return NULL;
+    }
     return [
       'origin_latitude' => $origin['lat'],
       'origin_longitude' => $origin['lon'],

@@ -10,6 +10,7 @@
         "drupal/core-recommended": "9.1.9",
         "drupal/core-vendor-hardening": "9.1.9",
         "drupal/dropsolid_rocketship_profile": "^6.0",
+        "drupal/frontend_editing": "^1.0@alpha",
         "drupal/rocketship_florista_demo_profile": "^1.0",
         "drupal/rocketship_theme_generator": "^3.2.0",
         "harvesthq/chosen": "^1.8.7",
