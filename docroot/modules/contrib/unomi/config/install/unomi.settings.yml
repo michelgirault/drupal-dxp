@@ -1,0 +1,2 @@
+connector: 'basic_auth'
+connector_config: {}

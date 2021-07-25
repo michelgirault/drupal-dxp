@@ -1,0 +1,19 @@
+services:
+  logger.channel.unomi:
+    parent: logger.channel_base
+    arguments: ['unomi']
+  unomi_api:
+    class: Drupal\unomi\UnomiApi
+    arguments: ['@config.factory', '@state', '@url_generator', '@request_stack', '@messenger', '@plugin.manager.unomi.connector', '@logger.channel.unomi', '@cache.unomi']
+  plugin.manager.unomi.connector:
+    class: Drupal\unomi\UnomiConnector\UnomiConnectorPluginManager
+    parent: default_plugin_manager
+  cache.unomi:
+    class: Drupal\Core\Cache\CacheBackendInterface
+    tags:
+      - { name: cache.bin }
+    factory: cache_factory:get
+    arguments: [unomi]
+  unomi.cookie_manager:
+    class: Drupal\unomi\UnomiCookieManager
+    arguments: ['@config.factory', '@request_stack']

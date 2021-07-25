@@ -5,28 +5,6 @@
  */
 /* stylelint-disable */
 /* stylelint-enable */
-.icon--icon-usp:before {
-  display: inline-block;
-  height: 3.785em;
-  width: 4.16em;
-  font-size: 0.39062rem;
-  background-image: url("../images/generated/sprite.svg");
-  background-position: 0em 0em;
-  background-size: 11.5em 11.125em;
-  content: "";
-}
-
-.icon--test:before {
-  display: inline-block;
-  height: 6.5em;
-  width: 6.5em;
-  font-size: 0.25rem;
-  background-image: url("../images/generated/sprite.svg");
-  background-position: -4.625em -4.25em;
-  background-size: 11.5em 11.125em;
-  content: "";
-}
-
 @media print {
   .view--office-overview .block--provider-facets {
     display: none !important;

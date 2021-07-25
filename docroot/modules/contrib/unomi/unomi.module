@@ -1,0 +1,145 @@
+<?php
+
+/**
+ * @file
+ * Unomi Drupal module file.
+ */
+
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\unomi\UnomiCookieManager;
+
+/**
+ * Implements hook_entity_base_field_info().
+ */
+function unomi_entity_base_field_info(EntityTypeInterface $entity_type) {
+
+  if ($entity_type->id() === 'paragraph' || $entity_type->id() === 'block_content') {
+    $fields = [];
+    $fields['unomi_segment_section'] = BaseFieldDefinition::create('list_string')
+      ->setLabel(t('Unomi Segment selection'))
+      ->setDescription(t('For which segment this content
+      should be visible. Leaving empty (default) will show the content for
+      everyone. "Unknown segment" will only show the content until a
+      segment has been determined for the visitor.'))
+      ->setSetting('allowed_values_function', 'unomi_segments')
+      ->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED)
+      ->setDisplayOptions('form', [
+        'type' => 'options_select',
+        'weight' => 99,
+      ])
+      ->setDisplayConfigurable('form', TRUE);
+
+    return $fields;
+  }
+}
+
+/**
+ * Returns Unomi Segments from Client.
+ */
+function unomi_segments() {
+
+  // Grab our service.
+  // @var \Drupal\unomi\UnomiApiInterface $unomiService
+  $unomiService = \Drupal::service('unomi_api');
+  // Clearing Cache so that getSegments calls getClient and returns latest unomi segments.
+  // @var \Drupal\unomi\UnomiCookieManager $cache
+  $cache = \Drupal::service('cache.unomi');
+  $cache->delete('unomi:segments');
+
+  // Get the option list of segments from Apache Unomi.
+  $allowedValues = $unomiService->getSegments();
+  return $allowedValues;
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_access().
+ */
+function unomi_paragraph_access(EntityInterface $entity, $operation, AccountInterface $account) {
+  return unomi_check_access( $entity, $operation, $account);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_access().
+ */
+function unomi_block_content_access(EntityInterface $entity, $operation, AccountInterface $account) {
+  return unomi_check_access( $entity, $operation, $account);
+}
+
+/**
+ * @param EntityInterface $entity
+ * @param $operation
+ * @param AccountInterface $account
+ * @return \Drupal\Core\Access\AccessResultAllowed|\Drupal\Core\Access\AccessResultForbidden|\Drupal\Core\Access\AccessResultNeutral
+ */
+function unomi_check_access(EntityInterface $entity, $operation, AccountInterface $account) {
+  // If the user has administer content, give them access.
+  $user = \Drupal::currentUser();
+  if ($user->hasPermission('administer content')) {
+    return AccessResult::allowed();
+  }
+
+  // Only step in to restrict/allow access if there is a view operations.
+  if ($operation != 'view') {
+    return AccessResult::neutral();
+  }
+
+  // Check if the paragraph has a field set for unomi segments.
+  if ($entity->hasField('unomi_segment_section')) {
+    $segments = $entity->get('unomi_segment_section')->getValue();
+    if (empty($segments)) {
+      return AccessResult::neutral()
+        ->addCacheableDependency($entity);
+    }
+
+    /** @var \Drupal\unomi\UnomiCookieManager $cookieManager */
+    $cookieManager = \Drupal::service('unomi.cookie_manager');
+    $cookieValues = $cookieManager->getSegmentCookieValues();
+
+    // Go over each segment that is allowed to see this paragraph.
+    foreach ($segments as $segment) {
+      $segmentValue = isset($segment['value']) ? $segment['value'] : '';
+      foreach ($cookieValues as $cookieValue) {
+        // Check cookie.
+        if ($cookieValue === (string) $segmentValue) {
+          return AccessResult::allowed()
+            ->addCacheableDependency($entity)
+            ->addCacheContexts(['cookies:' . $cookieManager->getCookieName()]);
+        }
+      }
+    }
+
+    return AccessResult::forbidden()
+      ->addCacheableDependency($entity)
+      ->addCacheContexts(['cookies:' . $cookieManager->getCookieName()]);
+  }
+}
+
+/**
+ * Implements hook_preprocess_page().
+ *
+ * Add our JS setting to all pages so that we can help the JS scripts identify
+ * the human readable name of these segments.
+ */
+function unomi_preprocess_page(&$variables) {
+  // Grab our service.
+  /** @var \Drupal\unomi\UnomiApiInterface $unomiService */
+  $unomiService = \Drupal::service('unomi_api');
+
+  // Get the option list of segments from Apache Unomi.
+  // @todo, from this function, we should get the tags, similar as in this
+  // tutorial: https://www.flocondetoile.fr/blog/cache-example-action-drupal-8
+  // However, we don't return a build array, we return an actual value.
+  $segmentsList = $unomiService->getSegments();
+
+  // Set the segments to our Drupal javascript settings.
+  if (!empty($segmentsList)) {
+    $variables['#attached']['library'][] = 'unomi/unomi';
+    $variables['#attached']['drupalSettings']['unomi']['segments'] = $segmentsList;
+    $variables['#cache']['tags'][] = 'unomi:segments';
+  }
+}

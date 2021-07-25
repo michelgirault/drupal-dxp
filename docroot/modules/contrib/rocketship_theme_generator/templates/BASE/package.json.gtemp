@@ -1,6 +1,6 @@
 {
   "name": "%machine_name%",
-  "version": "3.2.0",
+  "version": "3.2.1",
   "main": "Gulpfile.js",
   "description": "%description%",
   "author": "%author%",
@@ -10,7 +10,7 @@
     "@storybook/builder-webpack5": "^6.3.0-rc.11",
     "@storybook/manager-webpack5": "^6.3.0-rc.11",
     "browser-sync": "^2.26.3",
-    "critical": "~2.0.1",
+    "critical": "^4.0.1",
     "deepmerge": "^4.2.2",
     "gulp": "^4.0.2",
     "gulp-autoprefixer": "^3.1.1",

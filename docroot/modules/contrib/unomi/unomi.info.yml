@@ -1,0 +1,11 @@
+name: Unomi Integration for Personalisation
+core: 8.x
+description: Integrates Unomi with Drupal 8.
+package: Personalisation
+type: module
+core_version_requirement: ^8 || ^9
+configure: unomi.settings
+# Information added by Drupal.org packaging script on 2021-07-23
+version: '2.0.0-beta2'
+project: 'unomi'
+datestamp: 1627026307

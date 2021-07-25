@@ -1,0 +1,22 @@
+plugin.plugin_configuration.unomi_connector.standard:
+  type: config_object
+  label: 'Unomi standard connector settings'
+  mapping:
+    scheme:
+      type: string
+      label: 'The HTTP protocol to use for sending queries'
+    host:
+      type: string
+      label: 'The host name or IP of the Unomi server'
+    port:
+      type: integer
+      label: 'The port of the Unomi server'
+    path:
+      type: string
+      label: 'The path of the Unomi server'
+    core:
+      type: string
+      label: 'The name that identifies the Unomi core to use on the server'
+    timeout:
+      type: integer
+      label: 'Timeout for the http requests'

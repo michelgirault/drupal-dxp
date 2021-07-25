@@ -433,6 +433,18 @@
       // true if fixed header, false for regular header
       self.scrollToAnchor(0);
 
+      var skipLink = $('a[href="#main-content"]'),
+          content = $('#main-content');
+      if (skipLink.length && content.length) {
+        // when you click on the skiplink, force focus on the target
+        skipLink.once('js-once-skip-link').each(function() {
+          $(this).on('click', function(e) {
+            content.trigger('focus');
+            e.preventDefault();
+          });
+        });
+      }
+
       // make cards clickable: view teasers
       // if (teasers.length) self.cardLink(teasers);
 
@@ -604,7 +616,7 @@
         }
 
         if (typeof drupalSettings.theme_settings.scroll_to_exceptions !== 'undefined' && drupalSettings.theme_settings.scroll_to_exceptions !== null && drupalSettings.theme_settings.scroll_to_exceptions.length) {
-          exceptions = drupalSettings.theme_settings.scroll_to_exceptions; //.split(',');
+          exceptions = drupalSettings.theme_settings.scroll_to_exceptions;
         }
       }
     }
@@ -664,10 +676,10 @@
         // possible anchor links that refer to that hash
         var myAnchorLinks = $( 'a[href$="' + urlHash + '"]' );
 
-        // if there is an anchorlink selector, and it is part of the exceptions,
-        // trigger the scrollTo, only if NO anchorLink selector OR has anchorLink selector + is not part of exceptions
+        // trigger the scrollTo, only if NO anchorLink selector on the page
+        // OR anchorLink selector is not part of exceptions
 
-        // no anchor links to match
+        // 1) No anchor link
         if (myAnchorLinks.length < 1) {
           // recalculate offset if fixed header
           offset = calcOffset();
@@ -682,13 +694,13 @@
           self.scrollTo(scrollParams);
         }
 
-        // check all of anchorLinks if there are any
+        // 2) check all of anchorLinks if there are any + if not an exception
         myAnchorLinks.once('js-once-scrollable-anchors-active').each(function() {
 
           var myLink = $(this);
 
           // set an active class & scrollTo (if not part of the exclusion list)
-          if (exceptions !== null || !myLink.is(exceptions)) {
+          if (exceptions === null || !myLink.is(exceptions)) {
 
             // recalculate offset if fixed header
             offset = calcOffset();
@@ -717,7 +729,7 @@
 
         var anchorLink = $(this);
 
-        if (exceptions !== null || !anchorLink.is(exceptions)) {
+        if (exceptions === null || !anchorLink.is(exceptions)) {
 
           // remove active classes on anchor links
           anchorLink.removeClass('active').removeClass('active-trail');
@@ -726,7 +738,10 @@
         // click anchor link and animate scroll to it
         anchorLink.once('js-once-scrollable-anchor-click').click(function (e) {
 
-          if (exceptions !== null || !anchorLink.is(exceptions)) {
+          // if there are links to ignore for smooth scroll
+          // or anchorLink is not an exception
+          //
+          if (exceptions === null || !anchorLink.is(exceptions)) {
             var path = this.href;
 
             // get ID/hash from url
@@ -792,13 +807,14 @@
             // the path, minus stuff after hash or parameters
             var pathBase = path.split(/[?#]/)[0];
 
-            // if path points to current page, prevent reload.
-            // meaning, if the url's (stripped of hashes and parameters) match up,
-            // we're on the same page and don't need a page reload
-            // if (currentUrl.indexOf(pathBase) !== -1) {
-            if (currentUrl.replace(/\/$/, "") == pathBase.replace(/\/$/, "")) {
-              e.preventDefault();
+            // if the URLs (stripped of hashes and parameters) don't match up, it's
+            // a link to a different page.
+            // don't scroll to anchor on same page on click.
+            if (currentUrl.replace(/\/$/, "") !== pathBase.replace(/\/$/, "")) {
+              return true;
             }
+            // we're on the same page and don't need a page reload
+            e.preventDefault();
           }
         });
       });
@@ -812,7 +828,7 @@
 
           var anchorLink = $(this);
 
-          if (exceptions !== null || !anchorLink.is(exceptions)) {
+          if (exceptions === null || !anchorLink.is(exceptions)) {
 
             var path = this.href;
             // get hash from page url
@@ -828,7 +844,7 @@
               // scroll to it
               if (urlHash == linkHash) {
 
-                if (exceptions !== null || !anchorLink.is(exceptions)) {
+                if (exceptions === null || !anchorLink.is(exceptions)) {
                   anchorLink.addClass('js-active-anchor');
 
                   var scrollParams = {

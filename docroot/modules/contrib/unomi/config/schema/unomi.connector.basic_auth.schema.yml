@@ -1,0 +1,10 @@
+plugin.plugin_configuration.unomi_connector.basic_auth:
+  type: plugin.plugin_configuration.unomi_connector.standard
+  label: 'Unomi basic authentication connector settings'
+  mapping:
+    username:
+      type: string
+      label: 'Username for HTTP basic authentication'
+    password:
+      type: string
+      label: 'Password for HTTP basic authentication'

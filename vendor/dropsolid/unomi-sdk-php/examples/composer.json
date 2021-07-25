@@ -1,0 +1,17 @@
+{
+    "name": "nickveenhof/teamleaderapi-client-examples",
+    "type": "project",
+    "version": "0.0.1",
+    "authors": [
+        {
+            "name": "Nick Veenhof",
+            "email": "nick.veenhof@gmail.com"
+        }
+    ],
+    "require": {
+        "php-http/guzzle6-adapter": "^1.1",
+        "guzzlehttp/guzzle": "^6.3",
+        "dropsolid/unomi-sdk-php": "dev-master",
+        "dropsolid/oauth2-dropsolid-platform": "dev-master"
+    }
+}

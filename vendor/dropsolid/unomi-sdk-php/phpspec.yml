@@ -1,0 +1,6 @@
+suites:
+    UnomiSdkPhp:
+        namespace: Dropsolid\UnomiSdkPhp
+        psr4_prefix: Dropsolid\UnomiSdkPhp
+
+formatter.name: pretty

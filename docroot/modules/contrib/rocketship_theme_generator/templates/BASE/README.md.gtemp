@@ -714,12 +714,21 @@ breaks.
 - [Powerful templating engine](https://twig.symfony.com/doc/2.x/)
 
 
-## Issues
+## Common issues
 
 ### Theme suggestions don't work with Layouts
 
 For some reason, the theme suggestions don't work properly with the layouts if the template file name (using dashes) is not the same as the template machine (using underscores) name in `x.layouts.yml`.
 So, rename the template file name to match.
+
+### Unsupported platform for fsevents (only on Linux)
+
+Some older versions of the themes included the node module `fsevents` and it may still be a dependency of some other node modules. Problem is, this is made to work with MacOS.  
+Fortunately, `fsevents` is not needed for our nmp scripts or Gulp tasks to work, so we can remove or bypass it.  
+- Check your `package.json` file for a (dev)dependency of `fsevents`. If it is in there, remove it and reinstall your node modules (remove the old ones first)
+- Check your gulp tasks for `fsevents` and remove any requires or functions using this module
+- Rerun the task that gave you an error. If it's no longer there, you're good to go
+- If you still get an error, run `npm rebuild` and then rerun the task
 
 ## Maintenance
 

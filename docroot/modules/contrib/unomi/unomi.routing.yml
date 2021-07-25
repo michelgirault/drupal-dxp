@@ -1,0 +1,7 @@
+unomi.settings:
+  path: '/admin/config/services/unomi'
+  defaults:
+    _form: '\Drupal\unomi\Form\UnomiSettingsForm'
+    _title: 'Unomi Integration'
+  requirements:
+    _permission: 'administer unomi'

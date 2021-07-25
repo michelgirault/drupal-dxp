@@ -86,7 +86,7 @@
       {% set field_heading_level = field_heading_level|default(3) %}
 
       {% if label_display == 'visually_hidden' %}
-        {% set title_classes = title_classes|merge['visually-hidden'] %}
+        {% set title_classes = title_classes|merge(['visually-hidden']) %}
         {% set heading_display = false %}
         {# if label exists and is visually hidden, need an id for aria-labelledby #}
         {% if heading_id is defined and heading_id %}

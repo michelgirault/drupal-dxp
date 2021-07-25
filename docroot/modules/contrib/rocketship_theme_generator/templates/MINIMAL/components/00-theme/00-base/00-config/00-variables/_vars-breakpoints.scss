@@ -5,6 +5,8 @@
 // *
 ////////////////////////////////////////////////////////////////////////////////
 
+// if breakpoints are used & printed (needed for screen size detection in JS to work)
+$set-breakpoints: true !default;
 
 // * Breakpoints
 // =============================================================================

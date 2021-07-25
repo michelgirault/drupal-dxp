@@ -1,0 +1,104 @@
+<?php
+
+use Drupal\block\Entity\Block;
+use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
+
+/**
+ * Implements hook_requirements().
+ */
+function unomi_requirements($phase) {
+  $requirements = [];
+  if ($phase == 'install' || $phase == 'runtime') {
+    if (\Drupal::service('module_handler')->moduleExists('page_cache')) {
+      $requirements['unomi_cache'] = [
+        'title' => t('Internal Page Cache'),
+        'value' => t('Enabled'),
+        'description' => t('Internal page cache breaks cookie context caching, so should not be enabled with UNOMI. Dynamic Page cache is recommended'),
+        'severity' => REQUIREMENT_ERROR,
+      ];
+    }
+  }
+  return $requirements;
+}
+
+/**
+ * Allow Unomi Segment selection on block_content.
+ */
+function unomi_update_8001() {
+    $field_storage_definition = BaseFieldDefinition::create('list_string')
+      ->setLabel(t('Unomi Segment selection'))
+      ->setDescription(t('For which segment this paragraph should be visible. Leaving empty (default) will show the paragraph for everyone.'))
+      ->setSettings([
+        'allowed_values' => [],
+      ])
+      ->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED)
+      ->setDisplayOptions('form', [
+        'type' => 'options_select',
+        'weight' => 99,
+      ])
+      ->setDisplayConfigurable('form', TRUE);
+
+  \Drupal::entityDefinitionUpdateManager()
+    ->installFieldStorageDefinition('unomi_segment_section', 'block_content', 'block_content', $field_storage_definition);
+}
+
+/**
+ * Update all current '0' values with new '_unknown' value for paragraphs
+ */
+function unomi_update_8002(&$sandbox) {
+  if (!\Drupal::moduleHandler()->moduleExists('paragraphs')) {
+    return;
+  }
+  \Drupal::database()->update('paragraph__unomi_segment_section')
+    ->condition('unomi_segment_section_value', '0')
+    ->fields([
+      'unomi_segment_section_value' => '_unknown',
+    ])
+    ->execute();
+  \Drupal::database()->update('paragraph_revision__unomi_segment_section')
+    ->condition('unomi_segment_section_value', '0')
+    ->fields([
+      'unomi_segment_section_value' => '_unknown',
+    ])
+    ->execute();
+}
+
+/**
+ * Update all current '0' values with new '_unknown' value for block content
+ */
+function unomi_update_8003(&$sandbox) {
+  if (!\Drupal::moduleHandler()->moduleExists('block_content')) {
+    return;
+  }
+  \Drupal::database()->update('block_content__unomi_segment_section')
+    ->condition('unomi_segment_section_value', '0')
+    ->fields([
+      'unomi_segment_section_value' => '_unknown',
+    ])
+    ->execute();
+  \Drupal::database()->update('block_content_revision__unomi_segment_section')
+    ->condition('unomi_segment_section_value', '0')
+    ->fields([
+      'unomi_segment_section_value' => '_unknown',
+    ])
+    ->execute();
+}
+
+/**
+ * Update all current '0' values with new '_unknown' value for block config
+ */
+function unomi_update_8004() {
+  /** @var \Drupal\block\Entity\Block[] $blocks */
+  $blocks = Block::loadMultiple();
+
+  foreach ($blocks as $block) {
+    $visibility = $block->getVisibility();
+    if (isset($visibility['unomi_segment_selection']['unomi_segment_selection']['0'])) {
+      unset($visibility['unomi_segment_selection']['unomi_segment_selection']['0']);
+      $visibility['unomi_segment_selection']['unomi_segment_selection']['_unknown'] = '_unknown';
+      $block->setVisibilityConfig('unomi_segment_selection', $visibility['unomi_segment_selection']);
+      $block->save();
+    }
+  }
+}

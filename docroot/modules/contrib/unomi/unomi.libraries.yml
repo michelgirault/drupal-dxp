@@ -1,0 +1,4 @@
+unomi:
+  version: VERSION
+  dependencies:
+    - core/drupalSettings

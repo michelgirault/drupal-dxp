@@ -636,6 +636,13 @@ function %machine_name%_form_system_theme_settings_alter(&$form, Drupal\Core\For
     '#description'   => t('This field allows you to pass anchor link selectors that should not have animated scrolling. <br />Pass one or multiple comma-separated css selectors like this: <code>a[href="#my_exception"], a.no-smooth-scroll</code> <br />Be careful to avoid having multiple anchor links pointing to the same anchor.'),
   );
 
+  $form['theme_settings']['lazy_loading_fallback'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Lazy loading fallback'),
+    '#default_value' => theme_get_setting('lazy_loading_fallback'),
+    '#description'   => t('Enables lazy loading for browsers that don\'t support it. Uses a JS solution but is not compatible with IE11. You would need to change that yourself in <code>components/00-theme/01-atoms/04-images/00-image/images.js</code>'),
+  );
+
 }
 
 /**

@@ -72,7 +72,10 @@ let config = {
     src: 'icons/**/*.svg',
     svg: 'images/generated/sprite.svg',
     css: './components/00-theme/00-base/01-helpers/02-mixins/_mixins-sprite.scss',
-    template: './gulp/templates/_sprite.scss'
+    css2: './components/00-theme/00-base/09-icons/_icons-sprite.scss',
+    template: './gulp/templates/_sprite.scss',
+    template2: './gulp/templates/_sprite-classes.scss'
+
   },
   fonts: {
     src: './css/style.fonts.css',

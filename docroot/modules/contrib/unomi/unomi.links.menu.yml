@@ -1,0 +1,5 @@
+unomi.admin_settings_form:
+  title: 'Unomi'
+  parent: system.admin_config_services
+  description: 'Configure Unomi settings'
+  route_name: unomi.settings

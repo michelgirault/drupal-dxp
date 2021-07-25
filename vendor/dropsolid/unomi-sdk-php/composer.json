@@ -1,0 +1,61 @@
+{
+    "name": "dropsolid/unomi-sdk-php",
+    "description": "PHP client to connect to the Unomi API ",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Nick Veenhof",
+            "role": "Lead Developer"
+        }
+    ],
+    "keywords": [
+        "Unomi",
+        "api"
+    ],
+    "license": "MIT",
+    "require": {
+        "php": ">=7.1",
+        "php-http/httplug": "^1.1|^2.0",
+        "psr/http-message": "^1.0",
+        "php-http/client-implementation": "^1.0|^2.0",
+        "php-http/message-factory": "^1.0",
+        "php-http/discovery": "^1.0",
+        "php-http/client-common": "^1.0|^2.0",
+        "symfony/serializer": "^3.0|^4.0|^5.0",
+        "ext-json": "*"
+    },
+    "require-dev": {
+        "phpspec/phpspec": "^6.1",
+        "php-http/mock-client": "^1.3",
+        "symfony/var-dumper": "^3.0|^4.0|^5.0",
+        "namshi/cuzzle": "^2.0",
+        "phpunit/phpunit": "^8",
+        "squizlabs/php_codesniffer": "^2.3",
+        "phpro/grumphp": "^0.15.2",
+        "sebastian/phpcpd": "^4.1",
+        "phpmd/phpmd": "^2.7",
+        "phpstan/phpstan": "^0.11.15",
+        "sensiolabs/security-checker": "^6.0",
+        "php-http/guzzle6-adapter": "^1.0"
+    },
+    "suggest": {
+        "symfony/serializer": "^5.0",
+        "php-http/guzzle6-adapter": "^1.0",
+        "dropsolid/oauth2-dropsolid-platform": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "Dropsolid\\UnomiSdkPhp\\": [
+                "src/"
+            ]
+        }
+    },
+    "scripts": {
+        "grumphp": "vendor/bin/grumphp run --ansi",
+        "phpcs": "vendor/bin/phpcs",
+        "test": "vendor/bin/phpunit",
+        "coverage": "vendor/bin/phpunit --coverage-html ./build/coverage",
+        "phpstan": "vendor/bin/phpstan analyse --level=7 ./src",
+        "post-install-cmd": "vendor/bin/grumphp git:init"
+    }
+}

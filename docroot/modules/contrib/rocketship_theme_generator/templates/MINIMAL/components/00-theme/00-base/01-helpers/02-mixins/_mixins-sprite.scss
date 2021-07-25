@@ -96,16 +96,3 @@ $sprite: map-get($iconsGroup, sprite) !default;
   }
 }
 /* stylelint-enable */
-
-
-// * Icon classes
-// =============================================================================
-
-.icon--icon-usp {
-  @include sprite((icon: icon-usp, size: 25));
-}
-
-.icon--test {
-  @include sprite((icon: test, size: 25));
-}
-
